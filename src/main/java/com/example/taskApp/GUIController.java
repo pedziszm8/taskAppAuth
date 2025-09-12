@@ -14,21 +14,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-@Controller
+@Controller                                     //spring tworzy bin przy starcie
 public class GUIController {
 
-    @Autowired
+    @Autowired                                  //wstrzykiwanie bean z bierzacym kodem aplikacji z task repozitory przy każdym starcie aplikacji, wstrzykuje instancje
     TaskRepository taskRepository;
 
-    @GetMapping("/displayvariable")
+    @GetMapping("/displayvariable")             //aplikacja moze odbiera zadania http typu get
     public String displayVariable(Model model) {
         String wyswietl = "definicja";
 
         model.addAttribute("mojaZmienna", wyswietl);
-        return "displayVariable";
+        return "displayVariable";               //displayVariable.html
     }
 
-    @GetMapping("/taskList")
+    @GetMapping("/taskList")                    //adres:8080/taskList
     public String showTaskList(@AuthenticationPrincipal OAuth2User user, Model model) {
         if (user != null) {
             List<Task> taskList = taskRepository.findAll();
@@ -36,11 +36,11 @@ public class GUIController {
             model.addAttribute("name", user.getAttribute("name"));
         }
 
-        return "taskList";
+        return "taskList";                      //taskList.html
     }
 
-    @GetMapping("/")
-    public String showHomePage(@AuthenticationPrincipal OAuth2User user, Model model) {
+    @GetMapping("/")                            //adres:8080
+    public String showHomePage(@AuthenticationPrincipal OAuth2User user, Model model) {  //dane uzytkownika
         if (user != null) {
             String givenName = user.getAttribute("given_name");
 /*            String firstLetter = givenName.substring(0, 1);
@@ -52,10 +52,10 @@ public class GUIController {
             model.addAttribute("picture", user.getAttribute("picture"));
 
         }
-        return "home";
+        return "home";                          //home.html
     }
 
-    @GetMapping("/public")
+    @GetMapping("/public")                                      //adres:public
     public String showPublic(Model model) {
         return "public";
     }
@@ -121,4 +121,36 @@ public class GUIController {
         taskRepository.save(task);
         return "redirect:/taskList";
     }
+
+/*    @PostMapping("/updateTask")
+    public String updateTask(@ModelAttribute Task task,
+                             @RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            if (!imageFile.isEmpty()) {
+                task.setImage(imageFile.getBytes());
+            } else {
+                // zachowaj istniejące zdjęcie jeśli nie przesłano nowego
+                Task existing = taskRepository.findById(task.getId()).orElse(null);
+                if (existing != null) {
+                    task.setImage(existing.getImage());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        taskRepository.save(task);
+        return "redirect:/taskList";
+    }*/
+
+    /*
+    @PostMapping("/updateTask")
+public String updateTask(@ModelAttribute Task task, @RequestParam String subTasksJson) {
+    task.setSubTasksJson(subTasksJson); // ustawia JSON i automatycznie konwertuje na listę
+    taskRepository.save(task);
+    return "redirect:/taskList";
+}
+
+     */
+
 }

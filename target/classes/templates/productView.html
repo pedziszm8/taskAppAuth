@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title1</title>
+    <link rel="stylesheet" href="/style.css" type="text/css"/><!--<link th:href="@{/style.css}" rel="stylesheet"/>-->
+</head>
+<body>
+<div class="main">
+    <!--<table style="width:100%"
+    xmlns:th="http://www.w3.org/1999/xhtml" >><-->
+
+    <div th:if="${name}">
+        <p1>Użytkownik zalogowany: <span th:text="${name}"></span> </p1><p1 th:text="${name}"></p1>
+        <table>
+
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Status</th>
+                <!--/*</>
+                <th>Image</th>
+                */-->
+                <!--/*</>
+                <th>SubTasks</th>
+               */-->
+                <th>Usun</th>
+                <th>Edytuj</th>
+            </tr>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.id}"></td>
+                <td th:text="${task.description}"></td>
+                <td th:text="${task.status}"></td>
+                <!--/*<
+                <td>
+                    <img th:if="${task.image != null}" th:src="@{'/taskImage/' + ${task.id}}" width="100" height="100" alt="Brak obrazu"/>
+                </td>
+                >><^
+                */-->
+
+                <!--/*<
+                <td>
+                    <ul th:each="subtask : ${task.subTasks}">
+                        <li>
+                            <span th:text="${subtask.name}"></span>
+                            <span th:text="${subtask.done ? '✔' : '✘'}"></span>
+                        </li>
+                    </ul>
+                </td>
+
+                */-->
+
+                <td>
+                    <form action="#" th:action="@{/deleteTask/{id}(id=${task.id})}" method="post">
+
+                        <button type="submit">Delete</button>
+                    </form>
+
+                </td>
+
+                <td>
+                    <form action="#" th:action="@{/editTask/{id}(id=${task.id})}" method="post">
+                        <button type="submit">Edit</button>
+                    </form>
+                </td>
+
+            </tr>
+
+        </table>
+
+        <a href="/addNewTask">
+            <button>Dodaj task</button>
+        </a>
+    </div>
+    <div th:if="${name==null}">
+        Zaloguj się aby wyświetlić liste task
+        <a href="/oauth2/authorization/google">Zaloguj się <br> za pomoca google</a>
+    </div>
+
+</div>
+
+</body>
+</html>

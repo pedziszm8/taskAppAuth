@@ -1,0 +1,7 @@
+com\example\taskApp\TaskAppApplication.class
+com\example\taskApp\TaskRepository.class
+com\example\taskApp\GUIController.class
+com\example\taskApp\TaskController.class
+com\example\taskApp\SecurityConfiguration.class
+com\example\taskApp\helpers\StringHelper.class
+com\example\taskApp\Task.class

@@ -11,6 +11,18 @@ class StringHelperTest {
     void toUpperCase() {
         String word = "word";
         StringHelper stringHelper= new StringHelper();
-        Assertions.assertTrue(word.toUpperCase()=="Word");
+        word=stringHelper.toUpperCase(word);
+        Assertions.assertEquals(word,"Word");
+
     }
+
+    @Test
+    void toUpperCase2() {
+        String word = "word";
+        StringHelper stringHelper= new StringHelper();
+        word=stringHelper.toUpperCase(word);
+        Assertions.assertNotEquals(word,"word");
+    }
+
+
 }

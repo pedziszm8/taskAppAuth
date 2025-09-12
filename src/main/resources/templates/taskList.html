@@ -19,6 +19,12 @@
                 <th>Id</th>
                 <th>Description</th>
                 <th>Status</th>
+                <!--/*</>
+                <th>Image</th>
+                */-->
+                <!--/*</>
+                <th>SubTasks</th>
+               */-->
                 <th>Usun</th>
                 <th>Edytuj</th>
             </tr>
@@ -32,6 +38,19 @@
                 </td>
                 >><^
                 */-->
+
+                <!--/*<
+                <td>
+                    <ul th:each="subtask : ${task.subTasks}">
+                        <li>
+                            <span th:text="${subtask.name}"></span>
+                            <span th:text="${subtask.done ? '✔' : '✘'}"></span>
+                        </li>
+                    </ul>
+                </td>
+
+                */-->
+
                 <td>
                     <form action="#" th:action="@{/deleteTask/{id}(id=${task.id})}" method="post">
 
