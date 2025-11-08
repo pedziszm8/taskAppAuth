@@ -3,81 +3,84 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title1</title>
-    <link rel="stylesheet" href="/style.css" type="text/css"/><!--<link th:href="@{/style.css}" rel="stylesheet"/>-->
+    <title>Products</title>
+    <link rel="stylesheet" href="/style.css" type="text/css"/>
 </head>
 <body>
 <div class="main">
-    <!--<table style="width:100%"
-    xmlns:th="http://www.w3.org/1999/xhtml" >><-->
 
-    <div th:if="${name}">
-        <p1>Użytkownik zalogowany: <span th:text="${name}"></span> </p1><p1 th:text="${name}"></p1>
-        <table>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Product name</th>
+            <th>Price</th>
+            <th>Data</th>
+            <th>Picture</th>
+            <th>Properties</th>
+            <th>Usuń</th>
+            <th>Edytuj</th>
+        </tr>
 
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Status</th>
-                <!--/*</>
-                <th>Image</th>
-                */-->
-                <!--/*</>
-                <th>SubTasks</th>
-               */-->
-                <th>Usun</th>
-                <th>Edytuj</th>
-            </tr>
-            <tr th:each="task : ${tasks}">
-                <td th:text="${task.id}"></td>
-                <td th:text="${task.description}"></td>
-                <td th:text="${task.status}"></td>
-                <!--/*<
-                <td>
-                    <img th:if="${task.image != null}" th:src="@{'/taskImage/' + ${task.id}}" width="100" height="100" alt="Brak obrazu"/>
-                </td>
-                >><^
-                */-->
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.product_name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.data}"></td>
+            <td></td>
 
-                <!--/*<
-                <td>
-                    <ul th:each="subtask : ${task.subTasks}">
-                        <li>
-                            <span th:text="${subtask.name}"></span>
-                            <span th:text="${subtask.done ? '✔' : '✘'}"></span>
-                        </li>
-                    </ul>
-                </td>
+            <!-- PROPERTIES -->
+            <td>
+                <div th:if="${product.properties != null}"
+                     th:replace="~{::renderMap(${product.properties})}">
+                </div>
 
-                */-->
+                <span th:if="${product.properties == null}">
+                    —
+                </span>
+            </td>
 
-                <td>
-                    <form action="#" th:action="@{/deleteTask/{id}(id=${task.id})}" method="post">
+            <td>
+                <form th:action="@{/deleteProduct/{id}(id=${product.id})}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
 
-                        <button type="submit">Delete</button>
-                    </form>
+            <td>
+                <form th:action="@{/editProduct/{id}(id=${product.id})}" method="post">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+        </tr>
+    </table>
 
-                </td>
+    <a href="/addNewProduct">
+        <button>Dodaj produkt</button>
+    </a>
 
-                <td>
-                    <form action="#" th:action="@{/editTask/{id}(id=${task.id})}" method="post">
-                        <button type="submit">Edit</button>
-                    </form>
-                </td>
+</div>
 
-            </tr>
+<!-- RECURSIVE MAP RENDERING -->
+<div th:fragment="renderMap(properties)">
+    <div th:if="${properties instanceof T(java.util.Map)}">
+        <ul>
+            <li th:each="entry : ${properties.entrySet()}">
+                <span th:text="${entry.key}"></span> :
 
-        </table>
+                <div th:if="${entry.value instanceof T(java.util.Map)}"
+                     style="margin-left: 20px;"
+                     th:replace="~{::renderMap(${entry.value})}">
+                </div>
 
-        <a href="/addNewTask">
-            <button>Dodaj task</button>
-        </a>
+                <span th:if="${!(entry.value instanceof T(java.util.Map))}"
+                      th:text="${entry.value}">
+                </span>
+            </li>
+        </ul>
     </div>
-    <div th:if="${name==null}">
-        Zaloguj się aby wyświetlić liste task
-        <a href="/oauth2/authorization/google">Zaloguj się <br> za pomoca google</a>
-    </div>
 
+    <span th:if="${!(properties instanceof T(java.util.Map))}"
+          th:text="${properties}">
+    </span>
 </div>
 
 </body>

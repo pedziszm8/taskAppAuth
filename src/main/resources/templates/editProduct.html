@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<form action="#" th:action="@{/updateProduct}" th:object="${product}" method="post">
+
+
+    <input type="hidden" th:field="*{id}">
+    <br>
+    <label>product name</label><br>
+    <input type="text" th:field="*{product_name}">
+    <br>
+    <label>status</label>
+    <br>
+    <input type="text" th:field="*{price}">
+    <br>
+    <!--/* Obecne zdjęcie ->
+    <label>Aktualne zdjęcie:</label><br>
+    <img th:if="${task.image != null}" th:src="@{'/taskImage/' + ${task.id}}" width="150" height="150" alt="Brak zdjęcia"><br><br>
+
+    -- Nowe zdjęcie ->
+    <label>Zamień obraz (opcjonalnie):</label><br>
+    <input type="file" name="imageFile" accept="image/jpeg"><br><br>*/<-->
+
+    <!-- SUBTASKS -->
+    <!--/*
+    <h3>Subtasks</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Done</th>
+        </tr>
+        <tr th:each="subtask, iterStat : ${task.subTasks}">
+            <td>
+                <input type="text"
+                       th:name="'subTasks[' + ${iterStat.index} + '].name'"
+                       th:value="${subtask.name}"/>
+            </td>
+            <td>
+                <input type="checkbox"
+                       th:name="'subTasks[' + ${iterStat.index} + '].done'"
+                       th:checked="${subtask.done}"/>
+            </td>
+        </tr>
+    </table>*/-->
+
+    <button type="submit">Edit product</button>
+</form>
+
+
+</body>
+</html>

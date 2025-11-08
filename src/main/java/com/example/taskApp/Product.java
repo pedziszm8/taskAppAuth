@@ -1,5 +1,6 @@
 package com.example.taskApp;
 
+import com.example.taskApp.helpers.ProductPropertiesConverter;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,8 +25,15 @@ public class Product {
     LocalDate data;
     @Column
     File picture;
-    //@Column
-   // Map<String, Object> properties;
+
+
+
+    @Column
+            @Convert(converter = ProductPropertiesConverter.class)
+    Map<String, Object> properties;
+
+    @Transient //nie chcemy w bazie
+    String rawPropertiesForMap;
 
     public Long getId() {
         return id;
@@ -67,11 +75,19 @@ public class Product {
         this.picture = picture;
     }
 
-//    public Map<String, Object> getProperties() {
-//        return properties;
-//    }
-//
-//    public void setProperties(Map<String, Object> properties) {
-//        this.properties = properties;
-//    }
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
+
+    public String getRawPropertiesForMap() {
+        return rawPropertiesForMap;
+    }
+
+    public void setRawPropertiesForMap(String rawPropertiesForMap) {
+        this.rawPropertiesForMap = rawPropertiesForMap;
+    }
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:if="${error}" th:text="${error}"></div>
+
+<form action="#" th:action="@{/addNewProduct}" th:object="${newProduct}" method="post">
+    <label>Product name</label>
+    <br>
+    <input type="text" th:field="*{product_name}">
+    <br>
+    <label>Price</label>
+    <br>
+    <input type="text" th:field="*{price}">
+    <!--/*        <label>Upload image (jpg)</label>
+            <br>
+            <input type="file" name="imageFile" accept="image/jpeg">*/-->
+    <br>
+    <h3>Properties</h3>
+    <!--/  <div id="props"></div>*/-->
+
+     <label>Properties (JSON-like)</label><br>
+     <textarea th:field="*{rawPropertiesForMap}" rows="4" cols="50"
+            ></textarea>
+
+     <br><br>
+
+  <!--/    <button type="button" onclick="addProperty()">+ Add Property</button>*/-->
+
+     <!--/ <input type="text" th:field="*{rawPropertiesForMap}"> */-->
+
+    <!--/* <input type="hidden" name="propertiesJson" id="propertiesJson"> */-->
+
+    <br><br>
+    <button type="submit">Add product</button>
+</form>
+
+
+
+</body>
+</html>
