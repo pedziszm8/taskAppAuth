@@ -20,6 +20,9 @@
     <br>
     <input type="text" th:field="*{price}">
     <br>
+    <label>Properties (JSON-like)</label><br>
+    <input type="text" th:field="*{rawPropertiesForMap}">
+
     <!--/* Obecne zdjęcie ->
     <label>Aktualne zdjęcie:</label><br>
     <img th:if="${task.image != null}" th:src="@{'/taskImage/' + ${task.id}}" width="150" height="150" alt="Brak zdjęcia"><br><br>

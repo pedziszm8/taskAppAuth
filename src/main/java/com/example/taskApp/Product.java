@@ -26,7 +26,18 @@ public class Product {
     @Column
     File picture;
 
-
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", product_name='" + product_name + '\'' +
+                ", price=" + price +
+                ", data=" + data +
+                ", picture=" + picture +
+                ", properties=" + properties +
+                ", rawPropertiesForMap='" + rawPropertiesForMap + '\'' +
+                '}';
+    }
 
     @Column
             @Convert(converter = ProductPropertiesConverter.class)

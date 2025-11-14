@@ -1,5 +1,6 @@
 package com.example.taskApp;
 
+import com.example.taskApp.helpers.ProductPropertiesMapper;
 import com.example.taskApp.helpers.ProductStringToMapConverter;
 import org.antlr.v4.runtime.tree.pattern.ParseTreePattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class ProductGuiController {
     @Autowired
     private ProductStringToMapConverter productStringToMapConverter;
 
+    @Autowired
+    private ProductPropertiesMapper productPropertiesMapper;
+
     @GetMapping("/productinfo")
     public String getproductinfo(Model model) {
         String productString = productHelper.returstring();            //utworzenie obiektu
@@ -41,6 +45,11 @@ public class ProductGuiController {
         model.addAttribute("products", productList);
         //  model.addAttribute("name", user.getAttribute("name"));
         //}
+        System.out.println("MAP: " + productList);  //do sprawdzania
+        for (Product product :
+                productList) {
+            System.out.println(product);
+        }
         return "productView";
     }
 
@@ -49,8 +58,8 @@ public class ProductGuiController {
         model.addAttribute("newProduct", new Product());
         return "addNewProduct";
     }
-
-  /*  @PostMapping("/addNewProduct")
+////            poczatek
+/*    @PostMapping("/addNewProduct")
     public String addNewProduct(@ModelAttribute Product product, Model model) {  //odniecienie pobranie atrybótow z frontend
         String error = "cena nie może by mniejsza rowna 0";
         if (product.price <= 0) {
@@ -71,10 +80,9 @@ public class ProductGuiController {
         productRepository.save(product);  //do inerface
         return "redirect:/products";
 
-    }
-*/
+    }*/
 
-    @PostMapping("/addNewProduct")
+   /* @PostMapping("/addNewProduct")
     public String addNewProduct(@ModelAttribute Product product, Model model) {
         String error = "cena nie może by mniejsza rowna 0";
         if (product.price <= 0) {
@@ -93,14 +101,38 @@ public class ProductGuiController {
 
         return "redirect:/products";
     }
+*/
 
+    @PostMapping("/addNewProduct")
+    public String addNewProduct(@ModelAttribute Product product, Model model) {
+        String error = "Cena nie może być mniejsza lub równa 0";
+        if (product.price <= 0) {
+            model.addAttribute("error", error);
+            model.addAttribute("newProduct", product);
+            return "addNewProduct";
+        }
+
+        // Jeśli pole properties jest puste, nie próbuj konwertować
+        if (product.rawPropertiesForMap != null && !product.rawPropertiesForMap.trim().isEmpty()) {
+            Map<String, Object> converted = productStringToMapConverter.convert(product.rawPropertiesForMap);    //stringToMap
+            product.setProperties(converted);
+        } else {
+            product.setProperties(null); // albo new HashMap<>(), jeśli wolisz pustą mapę
+        }
+
+        // Wyczyść pole textarea
+        product.setRawPropertiesForMap(null);
+
+        productRepository.save(product);
+        return "redirect:/products";
+    }
 
 
     @PostMapping("/deleteProduct/{id}")
     public String deleteProduct(@PathVariable("id") long id) {
         System.out.println("Id suswanego produktu:" + id);
         productRepository.deleteById(id);
-        return "redirect:/productView";
+        return "redirect:/products";
     }
 
     @PostMapping("/editProduct/{id}")
@@ -108,16 +140,29 @@ public class ProductGuiController {
         Optional<Product> byId = productRepository.findById(id);
         Product product = byId.orElseThrow(() -> new RuntimeException("Invalid id"));
         model.addAttribute("product", product);
+        String rawPropertiesForMap = productPropertiesMapper.mapToString2(product.getProperties());   //MapToString (userString)
+        product.setRawPropertiesForMap(
+                rawPropertiesForMap
+        );
         return "editProduct";
     }
 
-   /* @PostMapping("/updateProduct")
+    //ctr atl m
+    @PostMapping("/updateProduct")
     public String updateProduct(@ModelAttribute Product product) {
+
+        if (product.rawPropertiesForMap != null && !product.rawPropertiesForMap.trim().isEmpty()) {
+            Map<String, Object> converted = productStringToMapConverter.convert(product.rawPropertiesForMap);    //stringToMap (userStringToMap)
+            product.setProperties(converted);
+        } else {
+            product.setProperties(null); // albo new HashMap<>(), jeśli wolisz pustą mapę
+        }
         productRepository.save(product);
+
+
         return "redirect:/products";
     }
-*/
-    @PostMapping("/updateProduct")
+/*    @PostMapping("/updateProduct")
     public String updateProduct(@ModelAttribute Product product, Model model) {
 
         // walidacja ceny
@@ -141,7 +186,7 @@ public class ProductGuiController {
         return "redirect:/products";
     }
 
-
+*/
 
 
     /*  @PostMapping("/addNewTask")
