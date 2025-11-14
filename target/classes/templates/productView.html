@@ -59,28 +59,29 @@
 
 </div>
 
-<!-- RECURSIVE MAP RENDERING -->
+<!-- ⭐ POPRAWIONY RECURSIVE MAP RENDERING — BEZ DUPLIKACJI ⭐ -->
 <div th:fragment="renderMap(properties)">
     <div th:if="${properties instanceof T(java.util.Map)}">
         <ul>
             <li th:each="entry : ${properties.entrySet()}">
-                <span th:text="${entry.key}"></span> :
 
+                <!-- klucz -->
+                <span th:text="${entry.key} + ':'"></span>
+
+                <!-- WARTOŚĆ PROSTA -->
+                <span th:if="${!(entry.value instanceof T(java.util.Map))}"
+                      th:text="${entry.value}">
+                </span>
+
+                <!-- WARTOŚĆ ZAGNIEŻDŻONA (MAPA) -->
                 <div th:if="${entry.value instanceof T(java.util.Map)}"
                      style="margin-left: 20px;"
                      th:replace="~{::renderMap(${entry.value})}">
                 </div>
 
-                <span th:if="${!(entry.value instanceof T(java.util.Map))}"
-                      th:text="${entry.value}">
-                </span>
             </li>
         </ul>
     </div>
-
-    <span th:if="${!(properties instanceof T(java.util.Map))}"
-          th:text="${properties}">
-    </span>
 </div>
 
 </body>

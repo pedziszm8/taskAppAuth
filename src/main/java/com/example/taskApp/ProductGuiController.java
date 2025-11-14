@@ -114,11 +114,12 @@ public class ProductGuiController {
 
         // Jeśli pole properties jest puste, nie próbuj konwertować
         if (product.rawPropertiesForMap != null && !product.rawPropertiesForMap.trim().isEmpty()) {
-            Map<String, Object> converted = productStringToMapConverter.convert(product.rawPropertiesForMap);    //stringToMap
+            Map<String, Object> converted =   ProductStringToMapConverter.parseProperties(product.rawPropertiesForMap);   //stringToMap              zmiana z roductStringToMapConverter.convert(product.rawPropertiesForMap);    na      ProductStringToMapConverter.parseProperties(product.rawPropertiesForMap);
             product.setProperties(converted);
         } else {
             product.setProperties(null); // albo new HashMap<>(), jeśli wolisz pustą mapę
         }
+
 
         // Wyczyść pole textarea
         product.setRawPropertiesForMap(null);
@@ -140,7 +141,7 @@ public class ProductGuiController {
         Optional<Product> byId = productRepository.findById(id);
         Product product = byId.orElseThrow(() -> new RuntimeException("Invalid id"));
         model.addAttribute("product", product);
-        String rawPropertiesForMap = productPropertiesMapper.mapToString2(product.getProperties());   //MapToString (userString)
+        String rawPropertiesForMap = productPropertiesMapper.mapToString(product.getProperties());   //MapToString (userString)  //wymieniono z 2
         product.setRawPropertiesForMap(
                 rawPropertiesForMap
         );
@@ -152,7 +153,7 @@ public class ProductGuiController {
     public String updateProduct(@ModelAttribute Product product) {
 
         if (product.rawPropertiesForMap != null && !product.rawPropertiesForMap.trim().isEmpty()) {
-            Map<String, Object> converted = productStringToMapConverter.convert(product.rawPropertiesForMap);    //stringToMap (userStringToMap)
+            Map<String, Object> converted = ProductStringToMapConverter.parseProperties(product.rawPropertiesForMap);    //stringToMap (userStringToMap)
             product.setProperties(converted);
         } else {
             product.setProperties(null); // albo new HashMap<>(), jeśli wolisz pustą mapę
