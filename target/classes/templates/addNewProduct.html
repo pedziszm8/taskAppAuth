@@ -20,16 +20,157 @@
             <br>
             <input type="file" name="imageFile" accept="image/jpeg">*/-->
     <br>
-    <h3>Properties</h3>
-    <!--/  <div id="props"></div>*/-->
+    <h3>Properties (tekstowo)</h3>
+    <textarea th:field="*{rawPropertiesForMap}" id="rawPropertiesForMap" rows="4" cols="50"></textarea>
 
-     <label>Properties (JSON-like)</label><br>
-     <textarea th:field="*{rawPropertiesForMap}" rows="4" cols="50"
-            ></textarea>
+    <br><br>
+    <h3>Properties (UI – dowolnie głębokie)</h3>
 
-     <br><br>
+    <div id="propertiesRoot" class="prop-block"></div>
 
-  <!--/    <button type="button" onclick="addProperty()">+ Add Property</button>*/-->
+    <button type="button" onclick="addCategory(propertiesRoot)">+ Dodaj kategorię</button>
+
+    <script>
+        // UTWORZENIE NOWEJ RAMKI (KATEGORII)
+        function createCategoryBlock() {
+            const div = document.createElement("div");
+            div.className = "prop-block";
+
+            div.innerHTML = `
+                <label>Klucz:</label>
+                <input type="text" class="key-input">
+
+                <div class="value-or-children">
+                    <label>Wartość:</label>
+                    <input type="text" class="value-input">
+                </div>
+
+                <br>
+                <button type="button" class="add-child-btn">Dodaj podkategorię</button>
+                <button type="button" class="add-sibling-btn">Dodaj nową kategorię</button>
+                <button type="button" class="remove-category-btn" style="color:red">Usuń kategorię</button>
+            `;
+
+            // Dodaj podkategorię
+            div.querySelector(".add-child-btn").onclick = function () {
+                const container = div.querySelector(".value-or-children");
+                container.innerHTML = "";
+                const childContainer = document.createElement("div");
+                childContainer.className = "children";
+                container.appendChild(childContainer);
+
+                addCategory(childContainer);
+                this.remove();
+            };
+
+            // Dodaj kategorię obok
+            div.querySelector(".add-sibling-btn").onclick = function () {
+                addCategory(div.parentElement);
+            };
+
+            // Usuń kategorię
+            div.querySelector(".remove-category-btn").onclick = function () {
+                const parent = div.parentElement;
+
+                // Nie usuwamy ostatniej kategorii na poziomie
+                if (parent.querySelectorAll(":scope > .prop-block").length === 1) {
+                    return;
+                }
+
+                div.remove();
+                refreshRemoveButtons();
+                updateTextarea();
+            };
+
+            return div;
+        }
+
+        // Dodaj kategorię
+        function addCategory(container) {
+            container.appendChild(createCategoryBlock());
+            refreshRemoveButtons();
+            updateTextarea();
+        }
+
+        // Domyślnie jedna główna kategoria
+        const propertiesRoot = document.getElementById("propertiesRoot");
+        addCategory(propertiesRoot);
+
+        // ================== SERIALIZACJA (REKURENCJA) ==================
+        function serializeBlock(block) {
+            const key = block.querySelector(".key-input").value.trim();
+            if (!key) return null;
+
+            const valueContainer = block.querySelector(".value-or-children");
+            const children = valueContainer.querySelector(".children");
+
+            if (children) {
+                let parts = [];
+                const childBlocks = children.querySelectorAll(":scope > .prop-block");
+                childBlocks.forEach(ch => {
+                    const c = serializeBlock(ch);
+                    if (c) parts.push(c);
+                });
+                return key + ":" + parts.join(":");
+            } else {
+                const val = block.querySelector(".value-input").value.trim();
+                return key + ":" + val;
+            }
+        }
+
+        // Generuje tekst do textarea
+        function updateTextarea() {
+            const blocks = propertiesRoot.querySelectorAll(":scope > .prop-block");
+            let result = [];
+
+            blocks.forEach(b => {
+                const r = serializeBlock(b);
+                if (r) result.push(r);
+            });
+
+            document.getElementById("rawPropertiesForMap").value =
+                (result.length > 0 ? result.join(";") + ";" : "");
+        }
+
+        // ================== POKAZYWANIE/UKRYWANIE PRZYCISKÓW USUWANIA ==================
+        function refreshRemoveButtons() {
+            // Sprawdzamy każdy poziom zagnieżdżenia
+            document.querySelectorAll(".children, #propertiesRoot").forEach(container => {
+                const blocks = container.querySelectorAll(":scope > .prop-block");
+
+                blocks.forEach((block, index) => {
+                    const removeBtn = block.querySelector(".remove-category-btn");
+
+                    if (blocks.length === 1) {
+                        // tylko jedna kategoria → ukryj "Usuń"
+                        removeBtn.style.display = "none";
+                    } else {
+                        removeBtn.style.display = "inline-block";
+                    }
+                });
+            });
+        }
+
+        document.addEventListener("input", updateTextarea);
+    </script>
+
+    <style>
+        .prop-block {
+            border: 1px solid #aaa;
+            padding: 10px;
+            margin: 8px;
+            background: #f8f8f8;
+        }
+        .children {
+            margin-left: 20px;
+            border-left: 2px dotted #999;
+            padding-left: 10px;
+        }
+    </style>
+
+
+
+    <!--/    <button type="button" onclick="addProperty()">+ Add Property</button>*/-->
 
      <!--/ <input type="text" th:field="*{rawPropertiesForMap}"> */-->
 
