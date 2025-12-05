@@ -42,12 +42,13 @@ public class GUIController {
     @GetMapping("/")                            //adres:8080
     public String showHomePage(@AuthenticationPrincipal OAuth2User user, Model model) {  //dane uzytkownika
         if (user != null) {
-            String givenName = user.getAttribute("given_name");
+            String givenName = user.getAttribute("given_name");//wyciagnie z tego za pomoca czego zalogowal sie uzytkownik
 /*            String firstLetter = givenName.substring(0, 1);
             String lastLetters = givenName.substring(1);
             givenName = firstLetter.toUpperCase() + lastLetters;*/
             StringHelper stringHelper=new StringHelper();
-            model.addAttribute("name", stringHelper.toUpperCase(givenName));
+            model.addAttribute("name", stringHelper.toUpperCase(givenName));//
+            String email = user.getAttribute("email");
             // model.addAttribute("ImageUrl", user.getAttribute("ImageUrl"));
             model.addAttribute("picture", user.getAttribute("picture"));
 

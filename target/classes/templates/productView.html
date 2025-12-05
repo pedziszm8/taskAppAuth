@@ -15,6 +15,7 @@
             <th>Product name</th>
             <th>Price</th>
             <th>Data</th>
+            <th>Category</th>
             <th>Picture</th>
             <th>Properties</th>
             <th>Usuń</th>
@@ -26,6 +27,7 @@
             <td th:text="${product.product_name}"></td>
             <td th:text="${product.price}"></td>
             <td th:text="${product.data}"></td>
+            <td th:text="${product.category!=null?product.category.category:'brak'}"></td>
             <td></td>
 
             <!-- PROPERTIES -->

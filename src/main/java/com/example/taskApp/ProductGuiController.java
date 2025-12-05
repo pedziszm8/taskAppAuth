@@ -1,5 +1,7 @@
 package com.example.taskApp;
 
+import com.example.taskApp.category.Category;
+import com.example.taskApp.category.CategoryRepository;
 import com.example.taskApp.helpers.ProductPropertiesMapper;
 import com.example.taskApp.helpers.ProductStringToMapConverter;
 import org.antlr.v4.runtime.tree.pattern.ParseTreePattern;
@@ -23,6 +25,9 @@ public class ProductGuiController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ProductStringToMapConverter productStringToMapConverter;
@@ -56,8 +61,13 @@ public class ProductGuiController {
     @GetMapping("/addNewProduct")                                           //wyswietlenie
     public String showAddProductForm(Model model) {
         model.addAttribute("newProduct", new Product());
+
+
+        model.addAttribute("categories", categoryRepository.findAll());
         return "addNewProduct";
     }
+
+
 ////            poczatek
 /*    @PostMapping("/addNewProduct")
     public String addNewProduct(@ModelAttribute Product product, Model model) {  //odniecienie pobranie atrybótow z frontend

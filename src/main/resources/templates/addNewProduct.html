@@ -20,6 +20,21 @@
             <br>
             <input type="file" name="imageFile" accept="image/jpeg">*/-->
     <br>
+    <label>Select category</label>
+
+    <select th:field="*{category}">
+        <option value="">
+            wybierz kategorie
+
+        </option>
+        <option th:each=" category: ${categories}"
+        th:text="${category.category}"
+                th:value="${category.id}">
+            
+        </option>
+    </select>
+
+
     <h3>Properties (tekstowo)</h3>
     <textarea th:field="*{rawPropertiesForMap}" id="rawPropertiesForMap" rows="4" cols="50"></textarea>
 

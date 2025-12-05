@@ -1,5 +1,6 @@
 package com.example.taskApp;
 
+import com.example.taskApp.category.Category;
 import com.example.taskApp.helpers.ProductPropertiesConverter;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class Product {
     @Column
     File picture;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    Category category;
+
     @Override
     public String toString() {
         return "Product{" +
@@ -40,7 +45,7 @@ public class Product {
     }
 
     @Column
-            @Convert(converter = ProductPropertiesConverter.class)
+    @Convert(converter = ProductPropertiesConverter.class)
     Map<String, Object> properties;
 
     @Transient //nie chcemy w bazie
@@ -100,5 +105,13 @@ public class Product {
 
     public void setRawPropertiesForMap(String rawPropertiesForMap) {
         this.rawPropertiesForMap = rawPropertiesForMap;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
