@@ -1,6 +1,7 @@
 package com.example.taskApp;
 
 import com.example.taskApp.helpers.StringHelper;
+import com.example.taskApp.statistics.StatisticsPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -19,6 +20,9 @@ public class GUIController {
 
     @Autowired                                  //wstrzykiwanie bean z bierzacym kodem aplikacji z task repozitory przy każdym starcie aplikacji, wstrzykuje instancje
     TaskRepository taskRepository;
+
+    @Autowired
+    StatisticsPersister statisticsPersister;
 
     @GetMapping("/displayvariable")             //aplikacja moze odbiera zadania http typu get
     public String displayVariable(Model model) {
@@ -47,8 +51,13 @@ public class GUIController {
             String lastLetters = givenName.substring(1);
             givenName = firstLetter.toUpperCase() + lastLetters;*/
             StringHelper stringHelper=new StringHelper();
-            model.addAttribute("name", stringHelper.toUpperCase(givenName));//
+            model.addAttribute("name", stringHelper.toUpperCase(givenName));//przesyłanie z googla logowania do frontednu
             String email = user.getAttribute("email");
+            String familyName = user.getAttribute("family_name");
+
+
+            statisticsPersister.saveUserData(givenName,familyName,email);
+
             // model.addAttribute("ImageUrl", user.getAttribute("ImageUrl"));
             model.addAttribute("picture", user.getAttribute("picture"));
 
