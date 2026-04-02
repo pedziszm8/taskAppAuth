@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="/style.css" type="text/css"/>
+</head>
+<body>
+<div class="main">
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Product name</th>
+            <th>Price</th>
+            <th>Data</th>
+            <th>Category</th>
+            <th>Picture</th>
+            <th>Properties</th>
+            <th>Usuń</th>
+            <th>Edytuj</th>
+        </tr>
+
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.product_name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.data}"></td>
+            <td th:text="${product.category!=null?product.category.category:'brak'}"></td>
+            <td></td>
+
+            <!-- PROPERTIES -->
+            <td>
+                <span th:if="${role == 'ADMIN'}">
+                    <div th:if="${product.properties != null}"
+                         th:replace="~{::renderMap(${product.properties})}">
+                    </div>
+                </span>
+                <span th:if="${product.properties == null}">
+                    —
+                </span>
+            </td>
+
+            <td>
+
+                <form th:if="${role == 'ADMIN'}"
+                      th:action="@{/deleteProduct/{id}(id=${product.id})}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+
+            <td>
+                <form th:action="@{/editProduct/{id}(id=${product.id})}" method="post">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <a href="/addNewProduct">
+        <button>Dodaj produkt</button>
+    </a>
+
+</div>
+
+<!-- ⭐ POPRAWIONY RECURSIVE MAP RENDERING — BEZ DUPLIKACJI ⭐ -->
+<div th:fragment="renderMap(properties)">
+    <div th:if="${properties instanceof T(java.util.Map)}">
+        <ul>
+            <li th:each="entry : ${properties.entrySet()}">
+
+                <!-- klucz -->
+                <span th:text="${entry.key} + ':'"></span>
+
+                <!-- WARTOŚĆ PROSTA -->
+                <span th:if="${!(entry.value instanceof T(java.util.Map))}"
+                      th:text="${entry.value}">
+                </span>
+
+                <!-- WARTOŚĆ ZAGNIEŻDŻONA (MAPA) -->
+                <div th:if="${entry.value instanceof T(java.util.Map)}"
+                     style="margin-left: 20px;"
+                     th:replace="~{::renderMap(${entry.value})}">
+                </div>
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

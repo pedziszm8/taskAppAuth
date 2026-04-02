@@ -1,0 +1,12 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/target
+.idea/
+*.iml
+target/
+# logs
+*.log
+# OS
+.DS_Store
+Thumbs.db

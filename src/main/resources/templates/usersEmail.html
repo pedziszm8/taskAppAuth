@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="/style.css" type="text/css"/>
+</head>
+<body>
+<div class="main">
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Last name</th>
+            <th>Name</th>
+            <th>Amount of logging</th>
+            <th>Usuń</th>
+            <th>Edytuj</th>
+        </tr>
+
+        <tr th:each="statistic : ${statistics}">
+            <td th:text="${statistic.id}"></td>
+            <td th:text="${statistic.email}"></td>
+            <td th:text="${statistic.name}"></td>
+            <td th:text="${statistic.last_name}"></td>
+            <td th:text="${statistic.amountOfLogging}"></td>
+
+
+            <td>
+                <form th:action="@{/deleteStatistic/{id}(id=${statistic.id})}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+
+            <td>
+                <form th:action="@{/editStatistic/{id}(id=${statistic.id})}" method="post">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <a href="/addNewStatistic">
+        <button>Dodaj produkt</button>
+    </a>
+
+</div>
+
+
+</body>
+</html>

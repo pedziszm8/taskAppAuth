@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kursy NBP</title>
+</head>
+<body>
+
+<h2>Kursy walut (NBP)</h2>
+
+<table border="1">
+    <tr>
+        <th>Waluta</th>
+        <th>Kod</th>
+        <th>Kurs</th>
+    </tr>
+
+    <tr th:each="rate : ${tables[0].rates}">
+        <td th:text="${rate.currency}"></td>
+        <td th:text="${rate.code}"></td>
+        <td th:text="${rate.mid}"></td>
+    </tr>
+
+</table>
+
+
+
+<br><br>
+
+<h2>Kamera na żywo – Soltorget Pajala (Szwecja)</h2>
+
+<div>
+    <img src="https://195.196.36.242/mjpg/video.mjpg"
+         alt="Live webcam Pajala"
+         style="width:640px; border:1px solid black;">
+</div>
+
+
+
+</body>
+</html>
