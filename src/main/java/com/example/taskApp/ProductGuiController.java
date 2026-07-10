@@ -9,15 +9,17 @@ import com.example.taskApp.statistics.Statistics;
 import com.example.taskApp.statistics.StatisticsRepository;
 import org.antlr.v4.runtime.tree.pattern.ParseTreePattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -130,7 +132,7 @@ public class ProductGuiController {
 */
 
     @PostMapping("/addNewProduct")
-    public String addNewProduct(@ModelAttribute Product product, Model model) {
+    public String addNewProduct(@ModelAttribute Product product, @RequestParam("imageFile") MultipartFile imageFile, Model model) {         /// @RequestParam("imageFile") MultipartFile imageFile
         String error = "Cena nie może być mniejsza lub równa 0";
         if (product.price <= 0) {
             model.addAttribute("error", error);
@@ -149,6 +151,18 @@ public class ProductGuiController {
 
         // Wyczyść pole textarea
         product.setRawPropertiesForMap(null);
+
+        try {
+            if (!imageFile.isEmpty()) {
+                product.setPicture(imageFile.getBytes());
+                product.setPictureContentType(imageFile.getContentType());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Błąd podczas odczytu obrazu", e);
+        }                                    ///
+
+
+        product.setData(LocalDate.now());///
 
         productRepository.save(product);
         return "redirect:/products";
@@ -176,7 +190,7 @@ public class ProductGuiController {
 
     //ctr atl m
     @PostMapping("/updateProduct")
-    public String updateProduct(@ModelAttribute Product product) {
+    public String updateProduct(@ModelAttribute Product product,  @RequestParam("imageFile") MultipartFile imageFile) {          /// @RequestParam("imageFile") MultipartFile imageFile
 
         if (product.rawPropertiesForMap != null && !product.rawPropertiesForMap.trim().isEmpty()) {
             Map<String, Object> converted = ProductStringToMapConverter.parseProperties(product.rawPropertiesForMap);    //stringToMap (userStringToMap)
@@ -184,11 +198,56 @@ public class ProductGuiController {
         } else {
             product.setProperties(null); // albo new HashMap<>(), jeśli wolisz pustą mapę
         }
+
+
+        try {
+            if (!imageFile.isEmpty()) {
+                product.setPicture(imageFile.getBytes());
+                product.setPictureContentType(imageFile.getContentType());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Błąd podczas odczytu obrazu", e);
+        }  ///
+
         productRepository.save(product);
 
 
         return "redirect:/products";
     }
+
+    @GetMapping("/productPicture/{id}")
+    @ResponseBody
+    public byte[] getProductPicture(@PathVariable Long id) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono produktu"));
+
+        return product.getPicture();
+    }
+
+
+    @GetMapping("/productImage/{id}")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow();
+
+        if (product.getPicture() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String contentType = product.getPictureContentType();
+
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(product.getPicture());
+    }
+
+
 /*    @PostMapping("/updateProduct")
     public String updateProduct(@ModelAttribute Product product, Model model) {
 

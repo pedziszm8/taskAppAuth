@@ -1,23 +1,114 @@
-.main{
+.main {
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-height: 100vh; /* Opcjonalnie: na całą wysokość ekranu */
 }
 
 table {
- display: flex;
+
+  /* Usunięto display: flex - to psuło tabelę */
+  border-collapse: separate;
+  border-spacing: 0; /* 0 jest lepsze przy zaokrąglonych rogach */
+
+  /* Poprawiona ramka zewnętrzna */
+  border: 1px solid gray;
+  border-radius: 15px;
+  overflow: hidden; /* To przytnie tło szarego wiersza do zaokrągleń */
+  background-color: white; /* To będzie kolor Twoich "przerw" */
+  margin: 20px;
+}
+
+/* Styl dla komórek - tutaj dodajesz ramki wewnętrzne */
+th, td {
+  border-left: 0.5px solid lightgray; /* Delikatne kreski w środku */
+  padding: 12px;
+}
+
+
+
+
+th:first-child {
+  border-left: 0cm;
+      }
+
+td:first-child {
+  border-left: 0cm;
+      }
+
+tbody{
+  overflow: hidden;
+}
+
+tr {
+
+  overflow: hidden; /* To przytnie tło szarego wiersza do zaokrągleń */
+
+}
+
+
+tr:first-child {
+  background-color: #999;
+  color: white;
+  border: 1px solid white;
+  border-spacing: 2px;
+  border-top-right-radius: 15px;
+  overflow: hidden; /* To przytnie tło szarego wiersza do zaokrągleń */
+
+}
+
+
+
+/* EFEKT ZEBRY - dodaj to na końcu */
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Jasnoszary kolor dla co drugiego wiersza */
+}
+
+tr:not(:first-child):nth-child(even):hover {
+  background-color: #e9e9e9; /* Nieco ciemniejszy szary #c8c8c8*/
+}
+
+/* Podświetlenie tylko dla nieparzystych wierszy danych (tych białych) */
+tr:not(:first-child):nth-child(odd):hover {
+  background-color: #f9f9f9; /* Subtelny błękit/jasny szary #e2e8f0*/
+}
+
+
+
+
+  th {
+    padding: 8px 12px;
+
+
+
+   /* Ciemnoszary */
+    color: white;              /* Kolor tekstu (biały) */
+
+  }
+
+  a{
   justify-content: center;
-  align-items: center;
-  width: 70%;
-  text-align: center;
-}
+    align-items: center;
+  }
 
-th {
-  height: 70px;
-}
+button {
+ padding: 9px 11px;
+  border-radius: 16px; /* Nowoczesne, mocne zaokrąglenie */
+  border: none;
 
-a{
-justify-content: center;
-  align-items: center;
-}
+  /* Kolorystyka */
+  background-color: #cbcbcb; /* Indigo - bardzo popularny w 2024/25 */
+  color: white;
+
+  /* Typografia */
+  font-family: 'Inter', sans-serif; /* Czytelny, nowoczesny font */
+  font-weight: 600;
+  font-size: 16px;
+
+  /* Interakcja */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; /* Płynność zmian */
+
+  /* Delikatny cień dodający głębi */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);}
+

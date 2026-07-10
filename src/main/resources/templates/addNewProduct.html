@@ -8,7 +8,7 @@
 
 <div th:if="${error}" th:text="${error}"></div>
 
-<form action="#" th:action="@{/addNewProduct}" th:object="${newProduct}" method="post">
+<form action="#" th:action="@{/addNewProduct}" th:object="${newProduct}" method="post"  enctype="multipart/form-data">
     <label>Product name</label>
     <br>
     <input type="text" th:field="*{product_name}">
@@ -16,9 +16,18 @@
     <label>Price</label>
     <br>
     <input type="text" th:field="*{price}">
-    <!--/*        <label>Upload image (jpg)</label>
-            <br>
-            <input type="file" name="imageFile" accept="image/jpeg">*/-->
+    <br>
+    <label>Picture - upload image</label>
+    <br>
+    <input
+            type="file"
+            name="imageFile"
+            accept="image/*"
+            onchange="previewImage(event)">
+    <img id="imagePreview"
+         width="150"
+         style="display:none;">
+    <br><br>
     <br>
     <label>Select category</label>
 
@@ -167,6 +176,15 @@
         }
 
         document.addEventListener("input", updateTextarea);
+
+        function previewImage(event) {
+
+                const image = document.getElementById("imagePreview");
+
+                image.src = URL.createObjectURL(event.target.files[0]);
+
+                image.style.display = "block";
+        }
     </script>
 
     <style>

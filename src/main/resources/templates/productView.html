@@ -28,7 +28,12 @@
             <td th:text="${product.price}"></td>
             <td th:text="${product.data}"></td>
             <td th:text="${product.category!=null?product.category.category:'brak'}"></td>
-            <td></td>
+            <td>
+
+                <img th:if="${product.picture != null}"
+                     th:src="@{'/productImage/' + ${product.id}}"
+                     width="120">
+            </td>
 
             <!-- PROPERTIES -->
             <td>

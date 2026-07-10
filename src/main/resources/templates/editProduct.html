@@ -8,7 +8,7 @@
 
 
 
-<form action="#" th:action="@{/updateProduct}" th:object="${product}" method="post">
+<form action="#" th:action="@{/updateProduct}" th:object="${product}" method="post" enctype="multipart/form-data">
 
 
     <input type="hidden" th:field="*{id}">
@@ -22,38 +22,48 @@
     <br>
     <label>Properties (JSON-like)</label><br>
     <input type="text" th:field="*{rawPropertiesForMap}">
+    <br><br>
 
-    <!--/* Obecne zdjęcie ->
-    <label>Aktualne zdjęcie:</label><br>
-    <img th:if="${task.image != null}" th:src="@{'/taskImage/' + ${task.id}}" width="150" height="150" alt="Brak zdjęcia"><br><br>
+    <label>zdjęcie</label>
+    <br>
+    <label>Replace picture (optional)</label>
+    <br>
 
-    -- Nowe zdjęcie ->
-    <label>Zamień obraz (opcjonalnie):</label><br>
-    <input type="file" name="imageFile" accept="image/jpeg"><br><br>*/<-->
+    <br> <img th:if="${product.picture != null}" th:src="@{'/productImage/' + ${product.id}}" width="150"> <br>
 
-    <!-- SUBTASKS -->
-    <!--/*
-    <h3>Subtasks</h3>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Done</th>
-        </tr>
-        <tr th:each="subtask, iterStat : ${task.subTasks}">
-            <td>
-                <input type="text"
-                       th:name="'subTasks[' + ${iterStat.index} + '].name'"
-                       th:value="${subtask.name}"/>
-            </td>
-            <td>
-                <input type="checkbox"
-                       th:name="'subTasks[' + ${iterStat.index} + '].done'"
-                       th:checked="${subtask.done}"/>
-            </td>
-        </tr>
-    </table>*/-->
+    <label>New picture preview:</label>
+    <input
+            type="file"
+            name="imageFile"
+            accept="image/*"
+            onchange="previewImage(event)">
+
+    <br><br>
+
+
+    <br>
+
+    <img id="imagePreview"
+         width="150"
+         style="display:none;">
+
+    <br><br>
 
     <button type="submit">Edit product</button>
+
+    <script>
+        function previewImage(event) {
+
+            const image = document.getElementById("imagePreview");
+
+            if (event.target.files && event.target.files[0]) {
+
+                image.src = URL.createObjectURL(event.target.files[0]);
+                image.style.display = "block";
+            }
+        }
+    </script>
+
 </form>
 
 

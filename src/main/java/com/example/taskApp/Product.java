@@ -24,8 +24,13 @@ public class Product {
     Double price;
     @Column
     LocalDate data;
+    @Lob
+    //@Column(columnDefinition = "BITEA")
+    //File picture;
+    byte[] picture;
+
     @Column
-    File picture;
+    String pictureContentType;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -83,12 +88,20 @@ public class Product {
         this.data = data;
     }
 
-    public File getPicture() {
-        return picture;
+  //  public File getPicture() {return picture;}
+
+   // public void setPicture(File picture) {this.picture = picture;}
+
+    public byte[] getPicture() {return picture;}
+
+    public void setPicture(byte[] picture) {this.picture = picture;}
+
+    public String getPictureContentType() {
+        return pictureContentType;
     }
 
-    public void setPicture(File picture) {
-        this.picture = picture;
+    public void setPictureContentType(String pictureContentType) {
+        this.pictureContentType = pictureContentType;
     }
 
     public Map<String, Object> getProperties() {
